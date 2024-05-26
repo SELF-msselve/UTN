@@ -1,0 +1,17 @@
+#:import C kivy.utils.get_color_from_hex
+
+<MiLabel@Label>:
+    size: 180, 50
+    font_size: 30
+<MiWidget>:
+
+    MiLabel:
+        text: 'Pera'
+        pos: root.x, root.top - self.height
+        color: C('#ff0000')
+
+    MiLabel:
+        text: 'Manzana!'
+        pos: root.right - self.width, root.top - self.height
+        color: .6,1,.2,1
+

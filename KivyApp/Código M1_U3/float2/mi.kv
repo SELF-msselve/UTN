@@ -1,0 +1,46 @@
+#:import C kivy.utils.get_color_from_hex
+<MiLabel@Label>:
+    font_size: 30
+    size_hint: .3, .3 
+    color: 0,0,1,1
+    canvas.before:
+        Color:
+            rgba:  .6,1,.2,1
+        
+        Rectangle:
+            size: self.size
+            pos: self.pos
+            
+<Button>:
+    color: .8,.9,0,1
+    font_size: 32
+    size_hint: .3, .3 
+    
+<MiWidget>:
+
+    MiLabel:
+        text: 'Pera'
+        pos_hint: {'x': 0, 'top': 1}
+
+    Label:
+        
+        text: 'Manzana'
+        size_hint: None, .2
+        width: 400
+        font_size: 32
+        color: 0,0,0,1
+        pos_hint: {'x': .5, 'top': .2}
+        canvas.before:
+            Color:
+                rgba:  .6,.9,.3,1
+            
+            Rectangle:
+                size: self.size
+                pos: self.pos 
+    Button:
+        text: 'Link 1...'
+        pos_hint: {'x': 0, 'y': 0}
+ 
+    Button:
+        text: 'Link 2...'
+        pos_hint: {'center_x':.5, 'center_y':.5}

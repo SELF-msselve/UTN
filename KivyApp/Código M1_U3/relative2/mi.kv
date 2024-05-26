@@ -1,0 +1,31 @@
+<MiWidget>:
+    Widget:
+        size_hint: None, None
+        size: 200, 200
+        pos: 200, 200
+
+        canvas:
+            Color:
+                rgba: 1, 1, 1, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
+    RelativeLayout:
+        size_hint: None, None
+        size: 200, 200
+        pos: 200, 200
+
+        canvas:
+            Color:
+                rgba: .6, 1, .7, .7
+            Rectangle:
+                pos: self.pos  # incorrecto
+                size: self.size
+        Button:
+            text: "Link 1...\npos_hint: \n{'x':0, 'y': -1}"
+            pos_hint: {'x':0, 'y': -1}
+        Button:
+            text: "Link 2...\npos_hint:\n(self.parent.x, \nself.parent.y - 200)"
+            #pos: self.parent.pos
+            pos:(self.parent.x, self.parent.y - 200) 
