@@ -1,0 +1,86 @@
+#:include pipe.kv
+
+WindowManager:
+    id: screen_manager
+    # ScoreWindow:
+    GameWindow:
+    ScoreWindow:
+
+<GameWindow>
+    name: "GameWindow"
+
+    FloatLayout:
+        Background:
+            id: background
+            canvas.before:
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+                    source: "sky.png"
+                Rectangle:
+                    size: self.width, 138
+                    pos: self.pos[0], self.pos[1] + self.height - 138
+                    texture: self.cloud_texture
+                Rectangle:
+                    size: self.width, 96
+                    pos: self.pos[0], self.pos[1]
+                    texture: self.floor_texture
+        Label:
+            id: score
+            # size_hint_y: None
+            # height: 96
+            text: "0"
+            font_size: 40
+            pos_hint: {"x":.4, "y":-.445}
+            # pos: (200, -250)
+        Button:
+            id: lvl_1
+            text:'Easy'
+            # size_hint_x: .1
+            # size_hint_y: .1
+            size: 60, 40
+            size_hint: None, None
+            pos_hint: {"x":.025, "y":.05}
+            on_release: 
+                # self.disabled = False
+                # self.opacity = 0
+                app.pipe_deviation_easy()
+        Button:
+            id: lvl_2
+            text:'Normal'
+            size: 60, 40
+            size_hint: None, None
+            pos_hint: {"x":.125, "y":.05}
+            on_release:
+                app.pipe_deviation_med()
+        Button:
+            id: lvl_3
+            text:'Hard'
+            size: 60, 40
+            size_hint: None, None
+            pos_hint: {"x":.225, "y":.05}
+            on_release:
+                app.pipe_deviation_hard()
+        Button:
+            text: "Start game"
+            background_normal: "transparent.png"
+            background_down: "transparent.png"
+            id: start_button
+            pos_hint: {"x":0,"top":1}
+            size_hint: 1, .8
+            on_release:
+                self.disabled = True
+                self.opacity = 0
+                app.start_game()
+        Bird:
+            source: "bird1.png"
+            size_hint: None, None
+            size: 46, 34
+            pos: 20, (root.height - 96) / 2.0
+            id: bird
+
+<ScoreWindow>
+    name: "ScoreWindow"
+
+    Label: 
+        text: "Score Window"
