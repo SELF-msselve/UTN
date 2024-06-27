@@ -8,6 +8,10 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 
 from pipe import Pipe
 
+class WindowManager(ScreenManager):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
 class GameWindow(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -179,8 +183,6 @@ class MainApp(App):
             most_left_pipe = self.pipes[pipe_xs.index(min(pipe_xs))]
             most_left_pipe.x = Window.width
 
-class WindowManager(ScreenManager):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+
 
 MainApp().run()
