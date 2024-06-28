@@ -1,14 +1,15 @@
 #:include pipe.kv
 
-WindowManager:
-    id: screen_manager
-    # ScoreWindow:
-    GameWindow:
-    ScoreWindow:
+# WindowManager:
+#     id: screen_manager
+#     # ScoreWindow:
+#     GameWindow:
+#     ScoreWindow:
 
-<GameWindow>
-    name: "GameWindow"
+# <GameWindow>
+    # name: "GameWindow"
 
+<GameWindow>:
     FloatLayout:
         Background:
             id: background
@@ -71,7 +72,7 @@ WindowManager:
             on_release:
                 self.disabled = True
                 self.opacity = 0
-                app.start_game()
+                root.start_game()
         Bird:
             source: "bird1.png"
             size_hint: None, None
@@ -80,7 +81,13 @@ WindowManager:
             id: bird
 
 <ScoreWindow>
-    name: "ScoreWindow"
-
-    Label: 
-        text: "Score Window"
+    BoxLayout:
+        name: "ScoreWindow"
+        orientation: 'vertical'
+        Label: 
+            text: "Score Window"
+        Label:
+            text: "Main Menu"
+        Button:
+            text: "Ir a la pantalla 2"
+            on_release: root.switch_to_GameWindow()

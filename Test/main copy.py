@@ -70,22 +70,9 @@ class Bird(Image):
 
 class MainApp(App):
     def build(self):
-        #self.root = GameWindow()
-        self.root = ScoreWindow()
-        return self.root
+        return GameWindow()
     
-    def switch_to_GameWindow(self):
-        self.root.clear_widgets()
-        self.root.add_widget(GameWindow())
-
-class ScoreWindow(BoxLayout, MainApp):
-    def __init__(self, **kwargs):
-        super(ScoreWindow, self).__init__(**kwargs)
-   
-class GameWindow(FloatLayout, MainApp):
-    def __init__(self, **kwargs):
-        super(GameWindow, self).__init__(**kwargs)
-    
+class GameWindow(FloatLayout):
     pipes = []
     GRAVITY = 300
     was_colliding = False
@@ -94,35 +81,35 @@ class GameWindow(FloatLayout, MainApp):
     def pipe_deviation_easy(self):
         self.pipe_diviation = 200
         Pipe.GAP_SIZE = 200
-        self.ids.lvl_1.disabled = True
-        self.ids.lvl_2.disabled = False
-        self.ids.lvl_3.disabled = False
+        self.root.ids.lvl_1.disabled = True
+        self.root.ids.lvl_2.disabled = False
+        self.root.ids.lvl_3.disabled = False
         
     def pipe_deviation_med(self):
         self.pipe_diviation = 150
         Pipe.GAP_SIZE = 150
-        self.ids.lvl_1.disabled = False
-        self.ids.lvl_2.disabled = True
-        self.ids.lvl_3.disabled = False
+        self.root.ids.lvl_1.disabled = False
+        self.root.ids.lvl_2.disabled = True
+        self.root.ids.lvl_3.disabled = False
         
     def pipe_deviation_hard(self):
         self.pipe_diviation = 100
         Pipe.GAP_SIZE = 100
-        self.ids.lvl_1.disabled = False
-        self.ids.lvl_2.disabled = False
-        self.ids.lvl_3.disabled = True
+        self.root.ids.lvl_1.disabled = False
+        self.root.ids.lvl_2.disabled = False
+        self.root.ids.lvl_3.disabled = True
 
     #def on_start(self):
     #    Clock.schedule_interval(self.root.ids.background.scroll_textures, 1/60.)
 
     def move_bird(self, time_passed):
-        bird = self.ids.bird
+        bird = self.root.ids.bird
         bird.y = bird.y + bird.velocity * time_passed
         bird.velocity = bird.velocity - self.GRAVITY * time_passed
         self.check_collision()
 
     def check_collision(self):
-        bird = self.ids.bird
+        bird = self.root.ids.bird
         # Go through each pipe and check if it collides
         is_colliding = False
         for pipe in self.pipes:
@@ -139,7 +126,7 @@ class GameWindow(FloatLayout, MainApp):
             self.game_over()
 
         if self.was_colliding and not is_colliding:
-            self.ids.score.text = str(int(self.ids.score.text)+1)
+            self.root.ids.score.text = str(int(self.root.ids.score.text)+1)
         self.was_colliding = is_colliding
 
     def game_over(self):
@@ -166,21 +153,21 @@ class GameWindow(FloatLayout, MainApp):
         popup.open()   
         
         
-        self.ids.lvl_1.disabled = False
-        self.ids.lvl_2.disabled = False
-        self.ids.lvl_3.disabled = False
-        self.ids.bird.pos = (20, (self.height - 96) / 2.0)
+        self.root.ids.lvl_1.disabled = False
+        self.root.ids.lvl_2.disabled = False
+        self.root.ids.lvl_3.disabled = False
+        self.root.ids.bird.pos = (20, (self.root.height - 96) / 2.0)
         for pipe in self.pipes:
-            self.remove_widget(pipe)
+            self.root.remove_widget(pipe)
         self.frames.cancel()
-        self.ids.start_button.disabled = False
-        self.ids.start_button.opacity = 1
+        self.root.ids.start_button.disabled = False
+        self.root.ids.start_button.opacity = 1
 
 
     def next_frame(self, time_passed):
         self.move_bird(time_passed)
         self.move_pipes(time_passed)
-        self.ids.background.scroll_textures(time_passed)
+        self.root.ids.background.scroll_textures(time_passed)
 
     def start_game(self):
         self.ids.lvl_1.disabled = True
@@ -197,13 +184,13 @@ class GameWindow(FloatLayout, MainApp):
         distance_between_pipes = Window.width / (num_pipes - 1)
         for i in range(num_pipes):
             pipe = Pipe()
-            pipe.pipe_center = randint(96 + self.pipe_diviation, self.height - self.pipe_diviation)
+            pipe.pipe_center = randint(96 + self.pipe_diviation, self.root.height - self.pipe_diviation)
             pipe.size_hint = (None, None)
             pipe.pos = (Window.width + i*distance_between_pipes, 96)
-            pipe.size = (64, self.height - 96)
+            pipe.size = (64, self.root.height - 96)
 
             self.pipes.append(pipe)
-            self.add_widget(pipe)
+            self.root.add_widget(pipe)
 
         # Move the pipes
         #Clock.schedule_interval(self.move_pipes, 1/60.)
