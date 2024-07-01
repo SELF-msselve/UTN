@@ -4,7 +4,7 @@ from kivy.properties import ObjectProperty
 from kivy.uix.image import Image
 from kivy.core.window import Window
 from kivy.clock import Clock
-#from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.floatlayout import FloatLayout
 from kivy.graphics import Rectangle
 from kivy.uix.boxlayout import BoxLayout
@@ -13,15 +13,14 @@ from kivy.uix.label import Label
 from kivy.uix.popup import Popup
 from kivy.uix.textinput import TextInput
 import pandas as pd
+
+from kivy.lang import Builder
+
 from pipe import Pipe
-
-#df is your dataframe
-#example function is applicable for all INT dataframe 
-
 from random import randint
 from kivy.properties import NumericProperty
 
-class UnificaScreen():
+class UnificaScreen(Screen):
     pipes = []
     GRAVITY = 300
     was_colliding = False
@@ -32,6 +31,7 @@ class UnificaScreen():
     dataScore = [1,2,3,4,5,6,7,8,9,10]
     data = {'Orden': dataOrden, 'Nombre': dataNombre, 'Score': dataScore}
     df_score = pd.DataFrame(data)
+
 
 class Background(Widget):
     cloud_texture = ObjectProperty(None)
@@ -48,8 +48,6 @@ class Background(Widget):
         self.floor_texture = Image(source="floor.png").texture
         self.floor_texture.wrap = 'repeat'
         self.floor_texture.uvsize = (Window.width / self.floor_texture.width, -1)
-        
-    
 
     def on_size(self, *args):
         self.cloud_texture.uvsize = (self.width / self.cloud_texture.width, -1)
@@ -67,7 +65,6 @@ class Background(Widget):
         texture = self.property('floor_texture')
         texture.dispatch(self)
 
-
 class Bird(Image):
     velocity = NumericProperty(0)
 
@@ -80,10 +77,7 @@ class Bird(Image):
         self.source = "bird1.png"
         super().on_touch_up(touch)
 
-
-
-
-class ScoreWindow(BoxLayout, UnificaScreen):
+class ScoreWindow(UnificaScreen, BoxLayout):
     def __init__(self, **kwargs):
         super(ScoreWindow, self).__init__(**kwargs)
         start_button = Button(text="Start Game")
@@ -92,16 +86,16 @@ class ScoreWindow(BoxLayout, UnificaScreen):
         
     def start_game(self, instance):
         App.get_running_app().switch_to_GameWindow()
+        #self.ids.screen_manager.current = 'GameWindow'
    
-
-class GameWindow(FloatLayout, UnificaScreen):
-    def __init__(self, **kwargs):
-        super(GameWindow, self).__init__(**kwargs)
+class GameWindow(UnificaScreen, FloatLayout):
+    # def __init__(self, **kwargs):
+    #     super(GameWindow, self).__init__(**kwargs)
     
-    pipes = []
-    GRAVITY = 300
-    was_colliding = False
-    pipe_diviation = 100
+    # pipes = []
+    # GRAVITY = 300
+    # was_colliding = False
+    # pipe_diviation = 100
 
     def pipe_deviation_easy(self):
         self.pipe_diviation = 200
@@ -123,9 +117,6 @@ class GameWindow(FloatLayout, UnificaScreen):
         self.ids.lvl_1.disabled = False
         self.ids.lvl_2.disabled = False
         self.ids.lvl_3.disabled = True
-
-    #def on_start(self):
-    #    Clock.schedule_interval(self.root.ids.background.scroll_textures, 1/60.)
 
     def move_bird(self, time_passed):
         bird = self.ids.bird
@@ -191,7 +182,6 @@ class GameWindow(FloatLayout, UnificaScreen):
         self.ids.start_button.disabled = False
         self.ids.start_button.opacity = 1
 
-
     def next_frame(self, time_passed):
         self.move_bird(time_passed)
         self.move_pipes(time_passed)
@@ -220,9 +210,6 @@ class GameWindow(FloatLayout, UnificaScreen):
             self.pipes.append(pipe)
             self.add_widget(pipe)
 
-        # Move the pipes
-        #Clock.schedule_interval(self.move_pipes, 1/60.)
-
     def move_pipes(self, time_passed):
         # Move pipes
         for pipe in self.pipes:
@@ -236,20 +223,23 @@ class GameWindow(FloatLayout, UnificaScreen):
         if right_most_x <= Window.width - distance_between_pipes:
             most_left_pipe = self.pipes[pipe_xs.index(min(pipe_xs))]
             most_left_pipe.x = Window.width
-    
+
+class WindowManager(ScreenManager):
+    pass
+
+kv = Builder.load_file('main_2.kv')
 
 class MainApp(App):
     def build(self):
-        #self.root = GameWindow()
-        self = ScoreWindow()
-        return self
+        return kv
+    # def build(self):
+    #     #self.root = GameWindow()
+    #     self.root = ScoreWindow()
+    #     return self.root
     
-    def switch_to_GameWindow(self):
-        self.root.clear_widgets()
-        self.root.add_widget(GameWindow())
-    
-
-
+    # def switch_to_GameWindow(self):
+    #     self.root.clear_widgets()
+    #     self.root.add_widget(GameWindow())
 
 if __name__ == "__main__":
     MainApp().run()
