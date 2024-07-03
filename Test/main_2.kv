@@ -1,13 +1,42 @@
-#:include pipe.kv
-
 WindowManager:
     id: screen_manager
     ScoreWindow:
+        name: 'ScoreWindow'
     GameWindow:
+        name: 'GameWindow'
 
+<Pipe>:
+    bottom_body_position: self.pos[1]
+    bottom_cap_position: self.pipe_center - self.GAP_SIZE/2.0 - self.CAP_SIZE
+    top_cap_position: self.pipe_center + self.GAP_SIZE/2.0
+    top_body_position: self.pipe_center + self.GAP_SIZE/2.0 + self.CAP_SIZE
+
+    canvas.before:
+        Rectangle:
+            # Bottom pipe body
+            size: 48, self.bottom_cap_position - self.bottom_body_position
+            pos: self.pos[0] + (64 - 48)/2.0, self.bottom_body_position
+            texture: self.pipe_body_texture
+            tex_coords: self.lower_pipe_tex_coords
+        Rectangle:
+            # Bottom pipe cap
+            size: 64, self.CAP_SIZE
+            pos: self.pos[0], self.bottom_cap_position
+            source: "pipe_cap.png"
+
+        Rectangle:
+            # Top pipe cap
+            size: 64, self.CAP_SIZE
+            pos: self.pos[0], self.top_cap_position
+            source: "pipe_cap.png"
+        Rectangle:
+            size: 48, self.top - self.top_body_position
+            pos: self.pos[0] + (64-48)/2.0, self.top_body_position
+            texture: self.pipe_body_texture
+            tex_coords: self.top_pipe_tex_coords
 
 <GameWindow>:
-    name: 'GameWindow'
+
     FloatLayout:
         Background:
             id: background
@@ -78,65 +107,43 @@ WindowManager:
             pos: 20, (root.height - 96) / 2.0
             id: bird
 
+<CustHeadLabel@Label>
+    font_size: 50
+    bold: True
+
+<CustGrid@GridLayout>
+    size_hint_y: None
+    height: self.minimum_height
+    row_default_height: '40dp'
+    row_force_default: True
+    cols: 2 # Este valor se ajustará en el código Python
+
 <ScoreWindow>
-    name: 'ScoreWindow'  
+ 
     BoxLayout:
         orientation: 'vertical'
         size: root.width, root.height
         padding: ('20dp', '20dp', '20dp', '20dp')
+        
+        CustHeadLabel:
+            text: 'GAME SCORES'
+            size_hint: 1,.1
+
+        CustGrid:
+            id: score_header
+
+        ScrollView:
+            do_scroll_x: False
+            do_scroll_y: True
+
+            CustGrid:
+                id: score_table
+        
         Button:
             text: 'GAME'
+            size_hint: 1,.1
             on_release:
-                #app.root.ids.screen_manager.current = 'GameWindow'
                 app.root.current = 'GameWindow'
-                #root.manager.transition.direction = 'up'
+                root.manager.transition.direction = 'right'
 
         
-        # BoxLayout:
-        #     orientation: 'horizontal'
-        #     Button:
-        #         id: lvl_1
-        #         text:'Easy'
-        #         size: 60, 40
-        #         size_hint: None, None
-        #         on_release: 
-        #             app.pipe_deviation_easy()
-        #     Button:
-        #         id: lvl_2
-        #         text:'Normal'
-        #         size: 60, 40
-        #         size_hint: None, None
-        #         on_release:
-        #             app.pipe_deviation_med()
-        #     Button:
-        #         id: lvl_3
-        #         text:'Hard'
-        #         size: 60, 40
-        #         size_hint: None, None
-        #         on_release:
-        #             app.pipe_deviation_hard()        
-        
-        # Label:
-        #     text: 'Score'
-        #     size_hint: 1,.1
-
-        # Grid:
-        #     id: unidades_header_layout
-
-        # ScrollView:
-        #     do_scroll_x: False
-        #     do_scroll_y: True
-
-        #     Grid:
-        #         id: unidades_table_layout
-        
-
-        # Label: 
-        #     text: "Score Window"
-        # Label:
-        #     text: "Main Menu"
-        # Button:
-        #     id: 'boton_cambia_juego'
-        #     text: "Ir a la pantalla 2"
-        #     on_press: self.start_game()
-        #     #on_release: self.switch_to_GameWindow()

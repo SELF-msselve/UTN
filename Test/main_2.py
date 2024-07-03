@@ -1,9 +1,11 @@
 from kivy.app import App
 from kivy.uix.widget import Widget
+from kivy.lang import Builder
 from kivy.properties import ObjectProperty
 from kivy.uix.image import Image
 from kivy.core.window import Window
 from kivy.clock import Clock
+from kivy.uix.gridlayout import GridLayout
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.floatlayout import FloatLayout
 from kivy.graphics import Rectangle
@@ -14,25 +16,14 @@ from kivy.uix.popup import Popup
 from kivy.uix.textinput import TextInput
 import pandas as pd
 
-from kivy.lang import Builder
+
 
 from pipe import Pipe
 from random import randint
 from kivy.properties import NumericProperty
 
-class UnificaScreen(Screen):
-    pipes = []
-    GRAVITY = 300
-    was_colliding = False
-    pipe_diviation = 100
-    entered_text = 'Nombre'
-    
-    dataOrden = [1,2,3,4,5,6,7,8,9,10]
-    dataNombre = ['Lucas','Stella','Eduardo','Anto','Joyi', 'Yayo','Lucy','Alberto', 'Martin', 'XXXXX']
-    dataScore = [1,2,3,4,5,6,7,8,9,10]
-    data = {'Orden': dataOrden, 'Nombre': dataNombre, 'Score': dataScore}
-    df_score = pd.DataFrame(data)
 
+    
 
 class Background(Widget):
     cloud_texture = ObjectProperty(None)
@@ -78,8 +69,45 @@ class Bird(Image):
         self.source = "bird1.png"
         super().on_touch_up(touch)
 
+class UnificaScreen(Screen):
+    pipes = []
+    GRAVITY = 300
+    was_colliding = False
+    pipe_diviation = 100
+    entered_text = 'Nombre'
+    
+    #dataOrden = [1,2,3,4,5,6,7,8,9,10]
+    dataNombre = ['Lucas','Stella','Eduardo','Anto','Joyi', 'Yayo','Lucy','Alberto', 'Martin', 'XXXXX']
+    dataScore = [1,2,3,4,5,6,7,8,9,10]
+    #data = {'Orden': dataOrden, 'Nombre': dataNombre, 'Score': dataScore}
+    data = {'Nombre': dataNombre, 'Score': dataScore}
+    df_score = pd.DataFrame(data)
+    
+    def genera_listas(self, header, table, lista):
+        self.ids[header].cols = len(lista)
+        self.ids[table].cols = len(lista)
+        for column_name in lista:
+            self.ids[header].add_widget(Label(text=str(column_name), bold=True, size_hint_y=None, height=40))
+
+        # Añadir las filas de datos a la tabla
+        for index, row in self.df_score[lista].iterrows():
+            for cell in row:
+                if index % 2 == 0:
+                    self.ids[table].add_widget(Label(text=str(cell), size_hint_y=None, height=40, color=(0,1,1,1)))
+                else:
+                    self.ids[table].add_widget(Label(text=str(cell), size_hint_y=None, height=40, color=(1,1,1,1)))
+        
+
 class ScoreWindow(UnificaScreen):
-    pass
+    def on_enter(self):
+        
+        lista = ['Nombre','Score']  #Columnas especificas del df.
+        header = 'score_header'
+        table = 'score_table'
+        UnificaScreen.genera_listas(self, header, table, lista )
+
+
+
    
 class GameWindow(UnificaScreen, FloatLayout):
 
@@ -134,8 +162,8 @@ class GameWindow(UnificaScreen, FloatLayout):
   
     def game_over(self):
         
-        app = App.get_running_app()
-        app.cambia_ScoreWindow() 
+        # app = App.get_running_app()
+        # app.cambia_ScoreWindow() 
 
         # Crear una ventana emergente (popup)
         self.popup = Popup(title="Ventana Secundaria", size_hint=(0.8, 0.6))
@@ -158,26 +186,6 @@ class GameWindow(UnificaScreen, FloatLayout):
         # Mostrar la ventana secundaria
         self.popup.open()
         
-        # # Crear una ventana emergente (popup)
-        # popup = Popup(title="Ventana Secundaria", size_hint=(0.8, 0.6))
-        
-        # # Crear un layout para la ventana secundaria
-        # secondary_layout = BoxLayout(orientation="vertical")
-        
-        # # Crear un campo de texto para ingresar texto
-        # text_input = TextInput(hint_text="Ingresa tu texto aquí")
-        # secondary_layout.add_widget(text_input)
-        
-        # # Crear un botón para cerrar la ventana secundaria
-        # close_button = Button(text="Cerrar Ventana Secundaria")
-        # close_button.bind(on_press=popup.dismiss)
-        # secondary_layout.add_widget(close_button)
-        
-        # # Agregar el layout a la ventana secundaria
-        # popup.content = secondary_layout
-        
-        # # Mostrar la ventana secundaria
-        # popup.open()
           
         self.ids.lvl_1.disabled = False
         self.ids.lvl_2.disabled = False
@@ -192,7 +200,10 @@ class GameWindow(UnificaScreen, FloatLayout):
     def close_popup(self, instance):
         # Capturar el valor del texto ingresado
         entered_text = self.text_input.text
-        print(f'Text entered: {entered_text}')  # Do something with the entered text
+        print(f'Text entered: {entered_text}')# Do something with the entered text
+        
+        app = App.get_running_app()
+        app.cambia_ScoreWindow() 
         
         # Cerrar el popup
         self.popup.dismiss()
@@ -210,7 +221,6 @@ class GameWindow(UnificaScreen, FloatLayout):
         self.ids.score.text = "0"
         self.was_colliding = False
         self.pipes = []
-        #Clock.schedule_interval(self.move_bird, 1/60.)
         self.frames = Clock.schedule_interval(self.next_frame, 1/60.)
 
         # Create the pipes
@@ -245,29 +255,13 @@ class WindowManager(ScreenManager):
 
 kv = Builder.load_file('main_2.kv')
 
-# class MainApp(App):
-#     def build(self):
-#         return kv
-#     # def build(self):
-#     #     #self.root = GameWindow()
-#     #     self.root = ScoreWindow()
-#     #     return self.root
-    
-#     # def switch_to_GameWindow(self):
-#     #     self.root.clear_widgets()
-#     #     self.root.add_widget(GameWindow())
-
-# if __name__ == "__main__":
-#     MainApp().run()
-    
-class AwesomeApp(App):
+class MiApp(App):
     def build(self):
-        #Window.size=(875,575)
         return kv
     
     def cambia_ScoreWindow(self):
         self.root.current = 'ScoreWindow'
-        #self.root.transition.direction = 'left'
+        self.root.transition.direction = 'left'
 
 if __name__ == '__main__':
-    AwesomeApp().run() 
+    MiApp().run() 
