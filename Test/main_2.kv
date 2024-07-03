@@ -7,6 +7,7 @@ WindowManager:
 
 
 <GameWindow>:
+    name: 'GameWindow'
     FloatLayout:
         Background:
             id: background
@@ -78,16 +79,18 @@ WindowManager:
             id: bird
 
 <ScoreWindow>
+    name: 'ScoreWindow'  
     BoxLayout:
-        name: "ScoreWindow"
         orientation: 'vertical'
         size: root.width, root.height
         padding: ('20dp', '20dp', '20dp', '20dp')
-        # Button:
-        #     text: 'GAME'
-        #     on_release:
-        #         app.ids.screen_manager.current = 'GameWindow'
-                #root.manager.transition.direction = 'up'        
+        Button:
+            text: 'GAME'
+            on_release:
+                #app.root.ids.screen_manager.current = 'GameWindow'
+                app.root.current = 'GameWindow'
+                #root.manager.transition.direction = 'up'
+
         
         # BoxLayout:
         #     orientation: 'horizontal'

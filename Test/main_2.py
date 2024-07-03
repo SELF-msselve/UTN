@@ -25,6 +25,7 @@ class UnificaScreen(Screen):
     GRAVITY = 300
     was_colliding = False
     pipe_diviation = 100
+    entered_text = 'Nombre'
     
     dataOrden = [1,2,3,4,5,6,7,8,9,10]
     dataNombre = ['Lucas','Stella','Eduardo','Anto','Joyi', 'Yayo','Lucy','Alberto', 'Martin', 'XXXXX']
@@ -77,25 +78,10 @@ class Bird(Image):
         self.source = "bird1.png"
         super().on_touch_up(touch)
 
-class ScoreWindow(UnificaScreen, BoxLayout):
-    def __init__(self, **kwargs):
-        super(ScoreWindow, self).__init__(**kwargs)
-        start_button = Button(text="Start Game")
-        start_button.bind(on_press=self.start_game)
-        self.add_widget(start_button)
-        
-    def start_game(self, instance):
-        App.get_running_app().switch_to_GameWindow()
-        #self.ids.screen_manager.current = 'GameWindow'
+class ScoreWindow(UnificaScreen):
+    pass
    
 class GameWindow(UnificaScreen, FloatLayout):
-    # def __init__(self, **kwargs):
-    #     super(GameWindow, self).__init__(**kwargs)
-    
-    # pipes = []
-    # GRAVITY = 300
-    # was_colliding = False
-    # pipe_diviation = 100
 
     def pipe_deviation_easy(self):
         self.pipe_diviation = 200
@@ -147,31 +133,52 @@ class GameWindow(UnificaScreen, FloatLayout):
 
   
     def game_over(self):
+        
+        app = App.get_running_app()
+        app.cambia_ScoreWindow() 
+
         # Crear una ventana emergente (popup)
-        popup = Popup(title="Ventana Secundaria", size_hint=(0.8, 0.6))
+        self.popup = Popup(title="Ventana Secundaria", size_hint=(0.8, 0.6))
         
         # Crear un layout para la ventana secundaria
-        secondary_layout = BoxLayout(orientation="vertical")
+        self.secondary_layout = BoxLayout(orientation="vertical")
         
         # Crear un campo de texto para ingresar texto
-        text_input = TextInput(hint_text="Ingresa tu texto aquí")
-        secondary_layout.add_widget(text_input)
+        self.text_input = TextInput(hint_text=self.entered_text)
+        self.secondary_layout.add_widget(self.text_input)
         
         # Crear un botón para cerrar la ventana secundaria
         close_button = Button(text="Cerrar Ventana Secundaria")
-        close_button.bind(on_press=popup.dismiss)
-        secondary_layout.add_widget(close_button)
+        close_button.bind(on_press=self.close_popup)
+        self.secondary_layout.add_widget(close_button)
         
         # Agregar el layout a la ventana secundaria
-        popup.content = secondary_layout
+        self.popup.content = self.secondary_layout
         
         # Mostrar la ventana secundaria
-        popup.open()  
+        self.popup.open()
         
-        self.clear_widgets()
-        self.add_widget(ScoreWindow())
+        # # Crear una ventana emergente (popup)
+        # popup = Popup(title="Ventana Secundaria", size_hint=(0.8, 0.6))
         
+        # # Crear un layout para la ventana secundaria
+        # secondary_layout = BoxLayout(orientation="vertical")
         
+        # # Crear un campo de texto para ingresar texto
+        # text_input = TextInput(hint_text="Ingresa tu texto aquí")
+        # secondary_layout.add_widget(text_input)
+        
+        # # Crear un botón para cerrar la ventana secundaria
+        # close_button = Button(text="Cerrar Ventana Secundaria")
+        # close_button.bind(on_press=popup.dismiss)
+        # secondary_layout.add_widget(close_button)
+        
+        # # Agregar el layout a la ventana secundaria
+        # popup.content = secondary_layout
+        
+        # # Mostrar la ventana secundaria
+        # popup.open()
+          
         self.ids.lvl_1.disabled = False
         self.ids.lvl_2.disabled = False
         self.ids.lvl_3.disabled = False
@@ -182,6 +189,15 @@ class GameWindow(UnificaScreen, FloatLayout):
         self.ids.start_button.disabled = False
         self.ids.start_button.opacity = 1
 
+    def close_popup(self, instance):
+        # Capturar el valor del texto ingresado
+        entered_text = self.text_input.text
+        print(f'Text entered: {entered_text}')  # Do something with the entered text
+        
+        # Cerrar el popup
+        self.popup.dismiss()
+    
+    
     def next_frame(self, time_passed):
         self.move_bird(time_passed)
         self.move_pipes(time_passed)
@@ -229,17 +245,29 @@ class WindowManager(ScreenManager):
 
 kv = Builder.load_file('main_2.kv')
 
-class MainApp(App):
-    def build(self):
-        return kv
-    # def build(self):
-    #     #self.root = GameWindow()
-    #     self.root = ScoreWindow()
-    #     return self.root
+# class MainApp(App):
+#     def build(self):
+#         return kv
+#     # def build(self):
+#     #     #self.root = GameWindow()
+#     #     self.root = ScoreWindow()
+#     #     return self.root
     
-    # def switch_to_GameWindow(self):
-    #     self.root.clear_widgets()
-    #     self.root.add_widget(GameWindow())
+#     # def switch_to_GameWindow(self):
+#     #     self.root.clear_widgets()
+#     #     self.root.add_widget(GameWindow())
 
-if __name__ == "__main__":
-    MainApp().run()
+# if __name__ == "__main__":
+#     MainApp().run()
+    
+class AwesomeApp(App):
+    def build(self):
+        #Window.size=(875,575)
+        return kv
+    
+    def cambia_ScoreWindow(self):
+        self.root.current = 'ScoreWindow'
+        #self.root.transition.direction = 'left'
+
+if __name__ == '__main__':
+    AwesomeApp().run() 
