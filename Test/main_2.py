@@ -84,31 +84,31 @@ class UnificaScreen(Screen):
     df_score = pd.DataFrame(data)
     
     def genera_listas(self, header, table, lista):
-        self.ids[header].cols = len(lista)
-        self.ids[table].cols = len(lista)
+        header_widget = self.ids[header]
+        table_widget = self.ids[table]
+        
+        header_widget.cols = len(lista)
+        table_widget.cols = len(lista)
         for column_name in lista:
-            self.ids[header].add_widget(Label(text=str(column_name), bold=True, size_hint_y=None, height=40))
+            self.add_widget(Label(text=str(column_name), bold=True, size_hint_y=None, height=40))
 
         # Añadir las filas de datos a la tabla
         for index, row in self.df_score[lista].iterrows():
             for cell in row:
                 if index % 2 == 0:
-                    self.ids[table].add_widget(Label(text=str(cell), size_hint_y=None, height=40, color=(0,1,1,1)))
+                    self.add_widget(Label(text=str(cell), size_hint_y=None, height=40, color=(0,1,1,1)))
                 else:
-                    self.ids[table].add_widget(Label(text=str(cell), size_hint_y=None, height=40, color=(1,1,1,1)))
+                    self.add_widget(Label(text=str(cell), size_hint_y=None, height=40, color=(1,1,1,1)))
         
 
 class ScoreWindow(UnificaScreen):
     def on_enter(self):
-        
         lista = ['Nombre','Score']  #Columnas especificas del df.
         header = 'score_header'
         table = 'score_table'
         UnificaScreen.genera_listas(self, header, table, lista )
 
 
-
-   
 class GameWindow(UnificaScreen, FloatLayout):
 
     def pipe_deviation_easy(self):
@@ -250,8 +250,8 @@ class GameWindow(UnificaScreen, FloatLayout):
             most_left_pipe = self.pipes[pipe_xs.index(min(pipe_xs))]
             most_left_pipe.x = Window.width
 
-class WindowManager(ScreenManager):
-    pass
+# class WindowManager(ScreenManager):
+#     pass
 
 kv = Builder.load_file('main_2.kv')
 
