@@ -1,9 +1,10 @@
-WindowManager:
-    id: screen_manager
-    ScoreWindow:
-        name: 'ScoreWindow'
-    GameWindow:
-        name: 'GameWindow'
+BoxLayout:
+
+    WindowManager:
+        id: screen_manager
+        StartWindow:
+        ScoreWindow:
+        GameWindow:
 
 <Pipe>:
     bottom_body_position: self.pos[1]
@@ -33,10 +34,92 @@ WindowManager:
             size: 48, self.top - self.top_body_position
             pos: self.pos[0] + (64-48)/2.0, self.top_body_position
             texture: self.pipe_body_texture
-            tex_coords: self.top_pipe_tex_coords
+            tex_coords: self.top_pipe_tex_coords    
+
+<CustGrid@GridLayout>
+    size_hint_y: None
+    height: self.minimum_height
+    row_default_height: '40dp'
+    row_force_default: True
+    cols: 1 # Este valor se ajustará en el código Python
+
+<CustButton@Button>
+    font_size: 32
+    background_color: 0,0,0,0
+    canvas.before:
+        Color:
+            rgba: (0,176/255,1,1) if self.state=='normal' else (0,0,0,1)  # visual feedback of press
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [20,]
+
+<CustHeadLabel@Label>
+    font_size: 50
+    bold: True
+    #font_name: "Comic"
+    #color: 1, 1, 1, 1   
+
+
+<StartWindow>
+    name: 'StartWindow'
+
+    BoxLayout:
+
+        orientation: 'vertical'
+        size: root.width, root.height
+        spacing: '20dp'
+        padding: ('20dp', '20dp', '20dp', '20dp')
+        
+        Label:
+            text: 'BIRD GAME'
+            font_size: 40
+            bold: True
+            #font_name: "Comic"
+            color: 1, 1, 1, 1
+            #background_color: 255/255, 75.3/255, 79.6/255
+
+        CustButton:
+            text: 'Go Game'
+            on_release:
+                app.root.ids.screen_manager.current = 'GameWindow'
+                root.manager.transition.direction = 'up'
+
+
+
+<ScoreWindow>
+    name: 'ScoreWindow'
+    BoxLayout:
+        orientation: 'vertical'
+        size: root.width, root.height
+        padding: ('20dp', '20dp', '20dp', '20dp')
+        
+        CustHeadLabel:
+            text: 'Unidades'
+            size_hint: 1,.1
+
+        CustGrid:
+            id: unidades_header_layout
+
+        ScrollView:
+            do_scroll_x: False
+            do_scroll_y: True
+
+            CustGrid:
+                id: unidades_table_layout
+
+
+        CustButton:
+            text: 'BACK'
+            # font_size: 32
+            size_hint: .5,.2
+            pos_hint: {'center_x': .5}
+            on_release:
+                app.root.ids.screen_manager.current = 'GameWindow'
+                root.manager.transition.direction = 'down'
 
 <GameWindow>:
-
+    name: 'GameWindow'
     FloatLayout:
         Background:
             id: background
@@ -72,7 +155,7 @@ WindowManager:
             on_release: 
                 # self.disabled = False
                 # self.opacity = 0
-                app.pipe_deviation_easy()
+                root.pipe_deviation_easy()
         Button:
             id: lvl_2
             text:'Normal'
@@ -80,7 +163,7 @@ WindowManager:
             size_hint: None, None
             pos_hint: {"x":.125, "y":.05}
             on_release:
-                app.pipe_deviation_med()
+                root.pipe_deviation_med()
         Button:
             id: lvl_3
             text:'Hard'
@@ -88,7 +171,7 @@ WindowManager:
             size_hint: None, None
             pos_hint: {"x":.225, "y":.05}
             on_release:
-                app.pipe_deviation_hard()
+                root.pipe_deviation_hard()
         Button:
             text: "Start game"
             background_normal: "transparent.png"
@@ -107,43 +190,10 @@ WindowManager:
             pos: 20, (root.height - 96) / 2.0
             id: bird
 
-<CustHeadLabel@Label>
-    font_size: 50
-    bold: True
 
-<CustGrid@GridLayout>
-    size_hint_y: None
-    height: self.minimum_height
-    row_default_height: '40dp'
-    row_force_default: True
-    cols: 2 # Este valor se ajustará en el código Python
 
-<ScoreWindow>
- 
-    BoxLayout:
-        orientation: 'vertical'
-        size: root.width, root.height
-        padding: ('20dp', '20dp', '20dp', '20dp')
-        
-        CustHeadLabel:
-            text: 'GAME SCORES'
-            size_hint: 1,.1
 
-        CustGrid:
-            id: score_header
 
-        ScrollView:
-            do_scroll_x: False
-            do_scroll_y: True
 
-            CustGrid:
-                id: score_table
-        
-        Button:
-            text: 'GAME'
-            size_hint: 1,.1
-            on_release:
-                app.root.current = 'GameWindow'
-                root.manager.transition.direction = 'right'
 
-        
+
