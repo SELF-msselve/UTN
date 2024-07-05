@@ -101,9 +101,49 @@ class Bird(Image):
         self.source = "bird1.png"
         super().on_touch_up(touch)
 
+class UnificaScreen(Screen):
+    pipes = []
+    GRAVITY = 300
+    was_colliding = False
+    pipe_diviation = 100
+    entered_text = 'Nombre'
+    
+    #dataOrden = [1,2,3,4,5,6,7,8,9,10]
+    dataNombre = ['Lucas','Stella','Eduardo','Anto','Joyi', 'Yayo','Lucy','Alberto', 'Martin', 'XXXXX']
+    dataScore = [1,2,3,4,5,6,7,8,9,10]
+    #data = {'Orden': dataOrden, 'Nombre': dataNombre, 'Score': dataScore}
+    data = {'Nombre': dataNombre, 'Score': dataScore}
+    df_score = pd.DataFrame(data)
+    
+    def genera_listas(self, header, table, lista):
+        header_widget = self.ids[header]
+        table_widget = self.ids[table]
+        
+        header_widget.cols = len(lista)
+        table_widget.cols = len(lista)
+        for column_name in lista:
+            self.add_widget(Label(text=str(column_name), bold=True, size_hint_y=None, height=40))
+
+        # Añadir las filas de datos a la tabla
+        for index, row in self.df_score[lista].iterrows():
+            for cell in row:
+                if index % 2 == 0:
+                    self.add_widget(Label(text=str(cell), size_hint_y=None, height=40, color=(0,1,1,1)))
+                else:
+                    self.add_widget(Label(text=str(cell), size_hint_y=None, height=40, color=(1,1,1,1)))
+        
+
+class ScoreWindow(UnificaScreen):
+    def on_enter(self):
+        lista = ['Nombre','Score']  #Columnas especificas del df.
+        header = 'score_header'
+        table = 'score_table'
+        UnificaScreen.genera_listas(self, header, table, lista )
+
 #Ventana de inicio del Juego con LOGO        
 class StartWindow(Unifica_Screen):
     pass
+
 #Ventana que para mostrar la tabla de Score.
 class ScoreWindow(Unifica_Screen):
     def on_enter(self):
@@ -272,7 +312,6 @@ class AwesomeApp(App):
         
     def cambia_ScoreWindow(self):
         self.root.ids.screen_manager.current = 'ScoreWindow'
-
 
 if __name__ == '__main__':
     AwesomeApp().run() 
