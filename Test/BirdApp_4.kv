@@ -52,7 +52,7 @@ BoxLayout:
         RoundedRectangle:
             pos: self.pos
             size: self.size
-            radius: [20,]
+            radius: [50,]
 
 <CustHeadLabel@Label>
     font_size: 50
@@ -99,14 +99,14 @@ BoxLayout:
             size_hint: 1,.1
 
         CustGrid:
-            id: unidades_header_layout
+            id: header_layout
 
         ScrollView:
             do_scroll_x: False
             do_scroll_y: True
 
             CustGrid:
-                id: unidades_table_layout
+                id: table_layout
 
 
         CustButton:

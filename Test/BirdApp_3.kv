@@ -36,16 +36,16 @@ BoxLayout:
             texture: self.pipe_body_texture
             tex_coords: self.top_pipe_tex_coords    
 
-<CustGrid@GridLayout>
+<CustGrid@MDGridLayout>
     size_hint_y: None
     height: self.minimum_height
     row_default_height: '40dp'
     row_force_default: True
     cols: 1 # Este valor se ajustará en el código Python
 
-<CustButton@Button>
+<CustButton@MDRaisedButton>
     font_size: 32
-    background_color: 0,0,0,0
+    md_bg_color: 0,0,0,0
     canvas.before:
         Color:
             rgba: (0,176/255,1,1) if self.state=='normal' else (0,0,0,1)  # visual feedback of press
@@ -54,30 +54,28 @@ BoxLayout:
             size: self.size
             radius: [20,]
 
-<CustHeadLabel@Label>
+<CustHeadLabel@MDLabel>
     font_size: 50
     bold: True
-    #font_name: "Comic"
-    #color: 1, 1, 1, 1   
+    theme_text_color: "Custom"
+    text_color: 1, 1, 1, 1
 
 
 <StartWindow>
     name: 'StartWindow'
 
     BoxLayout:
-
         orientation: 'vertical'
         size: root.width, root.height
         spacing: '20dp'
         padding: ('20dp', '20dp', '20dp', '20dp')
         
-        Label:
+        MDLabel:
             text: 'BIRD GAME'
             font_size: 40
             bold: True
-            #font_name: "Comic"
-            color: 1, 1, 1, 1
-            #background_color: 255/255, 75.3/255, 79.6/255
+            theme_text_color: "Custom"
+            text_color: 1, 1, 1, 1
 
         CustButton:
             text: 'Go Game'
@@ -111,7 +109,6 @@ BoxLayout:
 
         CustButton:
             text: 'BACK'
-            # font_size: 32
             size_hint: .5,.2
             pos_hint: {'center_x': .5}
             on_release:
@@ -136,46 +133,39 @@ BoxLayout:
                     size: self.width, 96
                     pos: self.pos[0], self.pos[1]
                     texture: self.floor_texture
-        Label:
+        MDLabel:
             id: score
-            # size_hint_y: None
-            # height: 96
             text: "0"
             font_size: 40
             pos_hint: {"x":.4, "y":-.445}
-            # pos: (200, -250)
-        Button:
+
+        MDRaisedButton:
             id: lvl_1
-            text:'Easy'
-            # size_hint_x: .1
-            # size_hint_y: .1
+            text: 'Easy'
             size: 60, 40
             size_hint: None, None
             pos_hint: {"x":.025, "y":.05}
             on_release: 
-                # self.disabled = False
-                # self.opacity = 0
                 root.pipe_deviation_easy()
-        Button:
+        MDRaisedButton:
             id: lvl_2
-            text:'Normal'
+            text: 'Normal'
             size: 60, 40
             size_hint: None, None
             pos_hint: {"x":.125, "y":.05}
             on_release:
                 root.pipe_deviation_med()
-        Button:
+        MDRaisedButton:
             id: lvl_3
-            text:'Hard'
+            text: 'Hard'
             size: 60, 40
             size_hint: None, None
             pos_hint: {"x":.225, "y":.05}
             on_release:
                 root.pipe_deviation_hard()
-        Button:
+        MDRaisedButton:
             text: "Start game"
-            background_normal: "transparent.png"
-            background_down: "transparent.png"
+            md_bg_color: 0, 0, 0, 0
             id: start_button
             pos_hint: {"x":0,"top":1}
             size_hint: 1, .8
