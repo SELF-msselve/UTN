@@ -1,10 +1,13 @@
+import os
+
 productos = []
 
 opcion = 'in'
 
 while opcion != '0':
+    #os.system('cls')
     print("""
-        Menu de ejemplo
+    Menu de ejemplo
         1. Carga datos
         2. Mostrar datos
         0. Salir""")
@@ -19,6 +22,6 @@ while opcion != '0':
         nuevo_producto = [nombre, stock]
         productos.append(nuevo_producto)
     elif opcion == '2':
-        print('muestra datos: ')
+        print(productos)
     elif opcion == '0':
-        print('gracias por usar la App')
+        print('Gracias por usar la App')
