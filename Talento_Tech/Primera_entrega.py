@@ -1,11 +1,23 @@
-import os
-
-productos = []
+productos = [
+    ['Manzanas', 5],
+    ['Peras', 7]
+]
 
 opcion = 'in'
 
+def CargaDatos():
+    print('carga de datos')
+    nombre = input('Ingrese el nombre del producto: ')
+    stock = int(input('Ingrese el stock del producto: '))
+    
+    nuevo_producto = [nombre, stock]
+    productos.append(nuevo_producto)   
+
+def PrintProductos():
+    for a in productos:
+        print(f'Nombre Producto: {a[0]}, Cantidad: {a[1]}')
+
 while opcion != '0':
-    #os.system('cls')
     print("""
     Menu de ejemplo
         1. Carga datos
@@ -15,13 +27,8 @@ while opcion != '0':
     opcion = input('Ingrese una opcion: ')
 
     if opcion == '1':
-        print('carga de datos')
-        nombre = input('Ingrese el nombre del producto: ')
-        stock = int(input('Ingrese el stock del producto: '))
-        
-        nuevo_producto = [nombre, stock]
-        productos.append(nuevo_producto)
+        CargaDatos()
     elif opcion == '2':
-        print(productos)
+        PrintProductos()
     elif opcion == '0':
         print('Gracias por usar la App')
