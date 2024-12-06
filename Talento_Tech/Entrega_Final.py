@@ -372,7 +372,7 @@ root = tk.Tk()
 # Ancho y alto de la ventana.
 root.geometry('825x550')
 # el usuario no la puede ajustar. solo la puede mover.
-root.resizable(False, False)
+#root.resizable(False, False)
 # Titulo de la Ventana.
 root.title('Stock Rama Verde')
 
