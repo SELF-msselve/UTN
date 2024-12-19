@@ -6,6 +6,7 @@ from tkinter import ttk
 import os
 import clase_db as db
 
+
 def funcion_include(nombre_tabla):
     data = {
         'Columna1': range(1, 11),
@@ -15,16 +16,22 @@ def funcion_include(nombre_tabla):
     nombre = 'Poti-' + nombre_tabla
     df = pd.DataFrame(data)
     dataBase.save_to_db(nombre, df)
-
+    update_table_2() 
 
 def new_proyect():
+    global dbFilePath
     dbFilePath = fd.asksaveasfilename(title='New Proyect...',
                 initialfile = 'Untitled.db',
                 defaultextension=".db",filetypes=[("All Files","*.*"),("Data Base","*.db")])
     global dataBase
     dataBase = db.data_base(dbFilePath)
-    funcion_include('nombre')
-    
+    data = {
+            'Columna1': False
+    }
+    nombre = 'index'
+    df = pd.DataFrame(data)
+    dataBase.save_to_db(nombre, df)
+    update_table_2() 
 
 def open_proyect():
     filetypes = (('Proyect', '*.db'), ('Files', '*.db'))
@@ -37,6 +44,7 @@ def open_proyect():
     global dataBase
     dataBase = db.data_base(dbFilePath)
     print(dataBase.list_tables())
+    update_table_2()
 
 def update_table_2():
     for i in table_2.get_children():
@@ -70,7 +78,7 @@ root.config(menu = menuBar) #menu(main_frame))
 mainFrame = tk.Frame(root)
 mainFrame.pack()
 
-boton1 = tk.Button(mainFrame, text='Poti', command=lambda: funcion_include('tabla1'))
+boton1 = tk.Button(mainFrame, text='Poti', command=lambda: funcion_include('tabla20'))
 boton1.pack()
 boton2 = tk.Button(mainFrame, text='Update', command=lambda: update_table_2())
 boton2.pack()
